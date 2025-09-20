@@ -65,12 +65,14 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             transform: scale(1.1);
         }
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-        .fade-in {
-            animation: fadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
         .hero-gif {
             border-radius: 12px;
@@ -80,6 +82,13 @@
         }
         .hero-gif:hover {
             transform: scale(1.05);
+        }
+        @media (max-width: 767px) {
+            .mobile-fade-in {
+                opacity: 0;
+                transform: translateY(20px);
+                animation: fadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            }
         }
     </style>
 </head>
@@ -100,14 +109,14 @@
                 Замовити
             </a>
             <div class="flex items-center space-x-2">
-                <img id="lang-ukr" src="https://flagcdn.com/ua.svg" alt="Ukrainian flag" class="language-flag" data-lang="uk">
+                <img id="lang-ukr" src="https://flagcdn.com/ua.svg" alt="Ukrainian flag" class="language-flag active" data-lang="uk">
                 <img id="lang-rus" src="https://flagcdn.com/ru.svg" alt="Russian flag" class="language-flag" data-lang="ru">
             </div>
         </nav>
     </header>
 
     <main>
-        <section id="hero" class="py-20 md:py-32 fade-in">
+        <section id="hero" class="py-20 md:py-32 mobile-fade-in" style="animation-delay: 0.2s;">
             <div class="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div class="text-center lg:text-left">
                     <h1 class="text-4xl md:text-6xl font-semibold text-gray-900 leading-snug tracking-tight" data-key="heroTitle">
@@ -128,7 +137,7 @@
             </div>
         </section>
 
-        <section id="how-it-works" class="py-20 bg-gray-50 shadow-inner">
+        <section id="how-it-works" class="py-20 bg-gray-50 shadow-inner mobile-fade-in" style="animation-delay: 0.4s;">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12 fade-in">
                     <h2 class="text-3xl md:text-4xl font-semibold text-gray-900" data-key="howItWorksTitle">Як це працює?</h2>
@@ -154,7 +163,7 @@
             </div>
         </section>
 
-        <section id="who-is-it-for" class="py-20">
+        <section id="who-is-it-for" class="py-20 mobile-fade-in" style="animation-delay: 0.6s;">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12 fade-in">
                     <h2 class="text-3xl md:text-4xl font-semibold text-gray-900" data-key="whoIsForTitle">Кому це буде корисно?</h2>
@@ -181,7 +190,7 @@
             </div>
         </section>
 
-        <section id="pricing" class="py-20 bg-gray-50 shadow-inner">
+        <section id="pricing" class="py-20 bg-gray-50 shadow-inner mobile-fade-in" style="animation-delay: 0.8s;">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12 fade-in">
                     <h2 class="text-3xl md:text-4xl font-semibold text-gray-900" data-key="pricingTitle">Тарифні плани</h2>
@@ -239,7 +248,7 @@
             </div>
         </section>
 
-        <section id="calculator" class="py-20">
+        <section id="calculator" class="py-20 mobile-fade-in" style="animation-delay: 1s;">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12 fade-in">
                     <h2 class="text-3xl md:text-4xl font-semibold text-gray-900" data-key="calculatorTitle">Розрахуйте вартість для вашого бізнесу</h2>
@@ -296,7 +305,7 @@
             </div>
         </section>
 
-        <section id="contact" class="py-20 bg-gray-900">
+        <section id="contact" class="py-20 bg-gray-900 mobile-fade-in" style="animation-delay: 1.2s;">
             <div class="container mx-auto px-6 text-center">
                 <h2 class="text-3xl md:text-4xl font-semibold text-white" data-key="contactTitle">Готові спростити життя вашим клієнтам?</h2>
                 <p class="mt-4 text-lg text-gray-300 max-w-2xl mx-auto font-light" data-key="contactSubtitle">
