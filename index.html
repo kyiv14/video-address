@@ -9,15 +9,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Clean & Minimalistic (White, Soft Grays, Accent Blue) -->
+    <!-- Chosen Palette: Energetic & Creative (Dark Navy, Vibrant Pink/Purple Gradient) -->
     <!-- Application Structure Plan: Создана одностраничная структура с плавной прокруткой по тематическим блокам. План: 1. Введение (Hero-секция) для захвата внимания. 2. "Как это работает?" для простого объяснения концепции. 3. "Для кого это?" с интерактивными карточками для сегментации аудитории. 4. "Тарифные планы" для ясного представления пакетов услуг. 5. Интерактивный калькулятор с динамической диаграммой для вовлечения пользователя и персонализации предложения. 6. Призыв к действию (CTA). Эта структура логически ведет потенциального клиента от знакомства с идеей до оценки ее ценности для своего бизнеса, что более эффективно, чем простое изложение пунктов из отчета. -->
     <!-- Visualization & Content Choices: Информация из отчета: Ценовые категории для разных типов бизнеса и пакетов услуг. Цель: Сравнение и персонализация. Метод: Интерактивный калькулятор (форма) и динамическая столбчатая диаграмма (Chart.js/Canvas). Взаимодействие: Пользователь выбирает тип бизнеса и дополнительные опции; JS-логика в реальном времени рассчитывает стоимость и обновляет диаграмму, сравнивая индивидуальное предложение со средними ценами по отраслям. Обоснование: Такой подход максимально вовлекает пользователя, предоставляя ему мгновенную персональную оценку, что делает услугу более понятной и прозрачной. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #FFFFFF;
-            color: #333;
+            background-color: #0A0A1F;
+            color: #E5E7EB;
         }
         .chart-container {
             position: relative;
@@ -37,15 +37,15 @@
             transition: color 0.3s;
         }
         .nav-link:hover {
-            color: #007BFF;
+            color: #FF5D7B;
         }
         .btn-primary {
-            background-color: #007BFF;
-            transition: background-color 0.3s, transform 0.2s;
+            background-image: linear-gradient(90deg, #FF5D7B 0%, #7E22CE 100%);
+            transition: transform 0.2s, box-shadow 0.3s;
         }
         .btn-primary:hover {
             transform: translateY(-2px);
-            background-color: #0056b3;
+            box-shadow: 0 8px 15px -5px rgba(255, 93, 123, 0.4);
         }
         .card {
             transition: transform 0.3s, box-shadow 0.3s;
@@ -54,75 +54,83 @@
             transform: translateY(-5px);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
-        .language-flag {
+        .language-btn {
             cursor: pointer;
-            width: 30px;
-            height: 20px;
+            padding: 4px 8px;
             border-radius: 4px;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: background-color 0.2s;
+            font-weight: 500;
         }
-        .language-flag.active {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            transform: scale(1.1);
-        }
-        .fade-in {
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        .language-btn.active {
+            font-weight: 600;
+            background-color: #2F2F4F;
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        .fade-in {
+            animation: fadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+        .animated-background {
+            background: linear-gradient(-45deg, #FF5D7B, #7E22CE, #FF5D7B, #7E22CE);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+        }
+        @keyframes gradient-animation {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
         .hero-gif {
             border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            border: 2px solid #E6E6E6;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 2px solid #3F3F7F;
+            transform: rotate(3deg);
             transition: transform 0.3s;
         }
         .hero-gif:hover {
-            transform: scale(1.05);
-        }
-        @media (max-width: 767px) {
-            .mobile-fade-in {
-                opacity: 0;
-                transform: translateY(20px);
-                animation: fadeIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-            }
+            transform: rotate(0deg) scale(1.05);
         }
     </style>
 </head>
 <body class="antialiased">
 
-    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+    <header class="bg-transparent backdrop-blur-md sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-xl font-semibold text-gray-800">
-                <a href="#" data-key="navTitle" class="text-gray-800">Відео-Адреса</a>
+            <div class="text-xl font-semibold text-white">
+                <a href="#" data-key="navTitle" class="text-white">Відео-Адреса</a>
             </div>
-            <div class="hidden md:flex space-x-8 text-lg font-medium">
-                <a href="#how-it-works" class="nav-link text-gray-600 hover:text-gray-900" data-key="navHowItWorks">Як це працює</a>
-                <a href="#who-is-it-for" class="nav-link text-gray-600 hover:text-gray-900" data-key="navWhoIsFor">Для кого</a>
-                <a href="#pricing" class="nav-link text-gray-600 hover:text-gray-900" data-key="navPricing">Тарифи</a>
-                <a href="#calculator" class="nav-link text-gray-600 hover:text-gray-900" data-key="navCalculator">Калькулятор</a>
+            <div class="hidden md:flex space-x-8 text-sm font-medium">
+                <a href="#how-it-works" class="nav-link text-gray-300 hover:text-white" data-key="navHowItWorks">Як це працює</a>
+                <a href="#who-is-it-for" class="nav-link text-gray-300 hover:text-white" data-key="navWhoIsFor">Для кого</a>
+                <a href="#pricing" class="nav-link text-gray-300 hover:text-white" data-key="navPricing">Тарифи</a>
+                <a href="#calculator" class="nav-link text-gray-300 hover:text-white" data-key="navCalculator">Калькулятор</a>
             </div>
-            <a href="#contact" class="hidden md:block bg-gray-800 text-white font-medium py-2 px-4 rounded-full text-sm shadow-lg btn-primary hover:bg-black" data-key="navContact">
+            <a href="#contact" class="hidden md:block bg-white text-[#0A0A1F] font-medium py-2 px-4 rounded-full text-sm shadow-lg hover:bg-gray-200" data-key="navContact">
                 Замовити
             </a>
             <div class="flex items-center space-x-2">
-                <img id="lang-ukr" src="https://flagcdn.com/ua.svg" alt="Ukrainian flag" class="language-flag active" data-lang="uk">
-                <img id="lang-rus" src="https://flagcdn.com/ru.svg" alt="Russian flag" class="language-flag" data-lang="ru">
+                <span id="lang-ukr" class="language-btn text-gray-300" data-lang="uk">УКР</span>
+                <span id="lang-rus" class="language-btn text-gray-300" data-lang="ru">РУС</span>
             </div>
         </nav>
     </header>
 
     <main>
-        <section id="hero" class="py-20 md:py-32 mobile-fade-in" style="animation-delay: 0.2s;">
+        <section id="hero" class="py-20 md:py-32 fade-in">
             <div class="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div class="text-center lg:text-left">
-                    <h1 class="text-4xl md:text-6xl font-semibold text-gray-900 leading-snug tracking-tight" data-key="heroTitle">
+                    <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-snug tracking-tight" data-key="heroTitle">
                         Ваш бізнес знайдуть з першого разу.
                     </h1>
-                    <p class="mt-6 text-lg md:text-xl text-gray-600 max-w-xl lg:max-w-none mx-auto font-light" data-key="heroSubtitle">
+                    <p class="mt-6 text-lg md:text-xl text-gray-300 max-w-xl lg:max-w-none mx-auto font-light" data-key="heroSubtitle">
                         Перетворіть складний маршрут на простий і зрозумілий відео-гід. Ми створюємо відео-адреси, які допомагають клієнтам без зусиль знайти вашу компанію, заощаджуючи їхній час і нерви.
                     </p>
                     <div class="mt-10">
@@ -132,134 +140,134 @@
                     </div>
                 </div>
                 <div class="hidden lg:flex justify-center items-center">
-                    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbjd6Z3l4azhhcW80OG44bW1jOHQ4MmN3c2lqcnFzOTFnY2psbzM1MSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/26BkNrU2M00299P9u/giphy.gif" alt="Animated video address example" class="w-full max-w-md hero-gif">
+                    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExd2R4dnpkYXd5anM1cGJ5dmtyNXJpZWxoYmR4cWJicmtocW9zOWZkNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/L2Xk6Xk0w8eT7wXw7R/giphy.gif" alt="Animated video address example" class="w-full max-w-md hero-gif">
                 </div>
             </div>
         </section>
 
-        <section id="how-it-works" class="py-20 bg-gray-50 shadow-inner mobile-fade-in" style="animation-delay: 0.4s;">
+        <section id="how-it-works" class="py-20 bg-gray-900 shadow-inner">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12 fade-in">
-                    <h2 class="text-3xl md:text-4xl font-semibold text-gray-900" data-key="howItWorksTitle">Як це працює?</h2>
-                    <p class="mt-4 text-gray-600 max-w-2xl mx-auto font-light" data-key="howItWorksSubtitle">Усього три прості кроки, щоб клієнти знаходили вас без проблем.</p>
+                    <h2 class="text-3xl md:text-4xl font-semibold text-white" data-key="howItWorksTitle">Як це працює?</h2>
+                    <p class="mt-4 text-gray-400 max-w-2xl mx-auto font-light" data-key="howItWorksSubtitle">Усього три прості кроки, щоб клієнти знаходили вас без проблем.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
                     <div class="p-6 fade-in" style="animation-delay: 0.2s;">
-                        <span class="inline-block w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-4 text-blue-600 text-3xl font-bold">1</span>
-                        <h3 class="text-xl font-medium mb-2 text-gray-900" data-key="step1Title">Зйомка маршруту</h3>
-                        <p class="text-gray-600 font-light" data-key="step1Text">Ми створюємо якісне відео, яке наочно показує шлях до вашої локації від ключових орієнтирів (метро, зупинка, парковка).</p>
+                        <span class="inline-block w-16 h-16 rounded-full bg-pink-500 flex items-center justify-center mx-auto mb-4 text-white text-3xl font-bold">1</span>
+                        <h3 class="text-xl font-medium mb-2 text-white" data-key="step1Title">Зйомка маршруту</h3>
+                        <p class="text-gray-400 font-light" data-key="step1Text">Ми створюємо якісне відео, яке наочно показує шлях до вашої локації від ключових орієнтирів (метро, зупинка, парковка).</p>
                     </div>
                     <div class="p-6 fade-in" style="animation-delay: 0.4s;">
-                        <span class="inline-block w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-4 text-blue-600 text-3xl font-bold">2</span>
-                        <h3 class="text-xl font-medium mb-2 text-gray-900" data-key="step2Title">Створення посилання і QR-коду</h3>
-                        <p class="text-gray-600 font-light" data-key="step2Text">Ви отримуєте унікальне посилання на відео і QR-код, які можна розмістити на сайті, у соцмережах, на візитках або в 2ГІС.</p>
+                        <span class="inline-block w-16 h-16 rounded-full bg-purple-500 flex items-center justify-center mx-auto mb-4 text-white text-3xl font-bold">2</span>
+                        <h3 class="text-xl font-medium mb-2 text-white" data-key="step2Title">Створення посилання і QR-коду</h3>
+                        <p class="text-gray-400 font-light" data-key="step2Text">Ви отримуєте унікальне посилання на відео і QR-код, які можна розмістити на сайті, у соцмережах, на візитках або в 2ГІС.</p>
                     </div>
                     <div class="p-6 fade-in" style="animation-delay: 0.6s;">
-                        <span class="inline-block w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-4 text-blue-600 text-3xl font-bold">3</span>
-                        <h3 class="text-xl font-medium mb-2 text-gray-900" data-key="step3Title">Клієнт легко знаходить вас</h3>
-                        <p class="text-gray-600 font-light" data-key="step3Text">Клієнт сканує QR-код або переходить за посиланням і дивиться коротке відео, як дістатися до вас. Більше ніяких запізнень і дзвінків "А як вас знайти?".</p>
+                        <span class="inline-block w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center mx-auto mb-4 text-white text-3xl font-bold">3</span>
+                        <h3 class="text-xl font-medium mb-2 text-white" data-key="step3Title">Клієнт легко знаходить вас</h3>
+                        <p class="text-gray-400 font-light" data-key="step3Text">Клієнт сканує QR-код або переходить за посиланням і дивиться коротке відео, як дістатися до вас. Більше ніяких запізнень і дзвінків "А як вас знайти?".</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="who-is-it-for" class="py-20 mobile-fade-in" style="animation-delay: 0.6s;">
+        <section id="who-is-it-for" class="py-20">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12 fade-in">
-                    <h2 class="text-3xl md:text-4xl font-semibold text-gray-900" data-key="whoIsForTitle">Кому це буде корисно?</h2>
-                    <p class="mt-4 text-gray-600 max-w-2xl mx-auto font-light" data-key="whoIsForSubtitle">Відео-адреси ідеально підходять для будь-якого бізнесу, чиє місце розташування важливе для клієнта.</p>
+                    <h2 class="text-3xl md:text-4xl font-semibold text-white" data-key="whoIsForTitle">Кому це буде корисно?</h2>
+                    <p class="mt-4 text-gray-400 max-w-2xl mx-auto font-light" data-key="whoIsForSubtitle">Відео-адреси ідеально підходять для будь-якого бізнесу, чиє місце розташування важливе для клієнта.</p>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                    <div class="card bg-white p-6 rounded-xl shadow-lg border border-gray-200 fade-in" style="animation-delay: 0.2s;">
-                        <h3 class="font-medium text-lg mb-2 text-gray-900" data-key="forRestaurantsTitle">🍽️ Ресторани та кафе</h3>
-                        <p class="text-gray-600 text-sm font-light" data-key="forRestaurantsText">Допоможіть гостям знайти ваш заклад, особливо якщо він розташований у дворах або у великій будівлі.</p>
+                    <div class="card bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 fade-in" style="animation-delay: 0.2s;">
+                        <h3 class="font-medium text-lg mb-2 text-white" data-key="forRestaurantsTitle">🍽️ Ресторани та кафе</h3>
+                        <p class="text-gray-400 text-sm font-light" data-key="forRestaurantsText">Допоможіть гостям знайти ваш заклад, особливо якщо він розташований у дворах або у великій будівлі.</p>
                     </div>
-                    <div class="card bg-white p-6 rounded-xl shadow-lg border border-gray-200 fade-in" style="animation-delay: 0.4s;">
-                        <h3 class="font-medium text-lg mb-2 text-gray-900" data-key="forShopsTitle">🛍️ Магазини та шоуруми</h3>
-                        <p class="text-gray-600 text-sm font-light" data-key="forShopsText">Збільште потік відвідувачів, спростивши пошук вашого магазину в торгових центрах або на жвавих вулицях.</p>
+                    <div class="card bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 fade-in" style="animation-delay: 0.4s;">
+                        <h3 class="font-medium text-lg mb-2 text-white" data-key="forShopsTitle">🛍️ Магазини та шоуруми</h3>
+                        <p class="text-gray-400 text-sm font-light" data-key="forShopsText">Збільште потік відвідувачів, спростивши пошук вашого магазину в торгових центрах або на жвавих вулицях.</p>
                     </div>
-                    <div class="card bg-white p-6 rounded-xl shadow-lg border border-gray-200 fade-in" style="animation-delay: 0.6s;">
-                        <h3 class="font-medium text-lg mb-2 text-gray-900" data-key="forMedTitle">🩺 Медичні центри</h3>
-                        <p class="text-gray-600 text-sm font-light" data-key="forMedText">Проявіть турботу про пацієнтів, надавши їм чіткі інструкції, як дістатися до вашої клініки чи кабінету.</p>
+                    <div class="card bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 fade-in" style="animation-delay: 0.6s;">
+                        <h3 class="font-medium text-lg mb-2 text-white" data-key="forMedTitle">🩺 Медичні центри</h3>
+                        <p class="text-gray-400 text-sm font-light" data-key="forMedText">Проявіть турботу про пацієнтів, надавши їм чіткі інструкції, як дістатися до вашої клініки чи кабінету.</p>
                     </div>
-                    <div class="card bg-white p-6 rounded-xl shadow-lg border border-gray-200 fade-in" style="animation-delay: 0.8s;">
-                        <h3 class="font-medium text-lg mb-2 text-gray-900" data-key="forCorpTitle">🏢 Великі компанії</h3>
-                        <p class="text-gray-600 text-sm font-light" data-key="forCorpText">Спростіть навігацію для відвідувачів і нових співробітників по території вашого офісного центру або підприємства.</p>
+                    <div class="card bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 fade-in" style="animation-delay: 0.8s;">
+                        <h3 class="font-medium text-lg mb-2 text-white" data-key="forCorpTitle">🏢 Великі компанії</h3>
+                        <p class="text-gray-400 text-sm font-light" data-key="forCorpText">Спростіть навігацію для відвідувачів і нових співробітників по території вашого офісного центру або підприємства.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="pricing" class="py-20 bg-gray-50 shadow-inner mobile-fade-in" style="animation-delay: 0.8s;">
+        <section id="pricing" class="py-20 bg-gray-900 shadow-inner">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12 fade-in">
-                    <h2 class="text-3xl md:text-4xl font-semibold text-gray-900" data-key="pricingTitle">Тарифні плани</h2>
-                    <p class="mt-4 text-gray-600 max-w-2xl mx-auto font-light" data-key="pricingSubtitle">Оберіть пакет, який підходить саме вашому бізнесу. Усе просто та прозоро.</p>
+                    <h2 class="text-3xl md:text-4xl font-semibold text-white" data-key="pricingTitle">Тарифні плани</h2>
+                    <p class="mt-4 text-gray-400 max-w-2xl mx-auto font-light" data-key="pricingSubtitle">Оберіть пакет, який підходить саме вашому бізнесу. Усе просто та прозоро.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                    <div class="card border border-gray-200 rounded-xl p-8 flex flex-col bg-white fade-in" style="animation-delay: 0.2s;">
-                        <h3 class="text-2xl font-medium text-center text-gray-900" data-key="basicTitle">Базовий</h3>
-                        <p class="text-center text-gray-500 mt-2 font-light" data-key="basicSubtitle">Для однієї локації</p>
+                    <div class="card border border-gray-700 rounded-xl p-8 flex flex-col bg-gray-800 fade-in" style="animation-delay: 0.2s;">
+                        <h3 class="text-2xl font-medium text-center text-white" data-key="basicTitle">Базовий</h3>
+                        <p class="text-center text-gray-400 mt-2 font-light" data-key="basicSubtitle">Для однієї локації</p>
                         <div class="text-center my-6">
-                            <span class="text-5xl font-semibold text-gray-900">$150</span>
+                            <span class="text-5xl font-semibold text-white">$150</span>
                         </div>
-                        <ul class="space-y-4 text-gray-600 flex-grow text-sm font-light">
+                        <ul class="space-y-4 text-gray-400 flex-grow text-sm font-light">
                             <li data-key="basicFeature1">✓ Відео-маршрут до 50 секунд</li>
                             <li data-key="basicFeature2">✓ 1 ключовий орієнтир</li>
                             <li data-key="basicFeature3">✓ Стандартний монтаж</li>
                             <li data-key="basicFeature4">✓ QR-код і посилання</li>
                         </ul>
-                        <a href="#contact" class="mt-8 w-full text-center bg-gray-200 text-gray-800 font-medium py-3 rounded-full hover:bg-gray-300 transition-colors" data-key="selectButton">Обрати</a>
+                        <a href="#contact" class="mt-8 w-full text-center bg-gray-600 text-white font-medium py-3 rounded-full hover:bg-gray-700 transition-colors" data-key="selectButton">Обрати</a>
                     </div>
 
-                    <div class="card border border-blue-500 rounded-xl p-8 flex flex-col relative bg-white shadow-lg fade-in" style="animation-delay: 0.4s;">
-                        <div class="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-blue-500 text-white text-xs font-medium px-4 py-1 rounded-full tracking-wider" data-key="popularLabel">ПОПУЛЯРНИЙ</div>
-                        <h3 class="text-2xl font-medium text-center text-gray-900" data-key="premiumTitle">Преміум</h3>
-                        <p class="text-center text-gray-500 mt-2 font-light" data-key="premiumSubtitle">Для кількох локацій або складних маршрутів</p>
+                    <div class="card border border-pink-500 rounded-xl p-8 flex flex-col relative bg-gray-800 shadow-lg fade-in" style="animation-delay: 0.4s;">
+                        <div class="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-pink-500 text-white text-xs font-medium px-4 py-1 rounded-full tracking-wider" data-key="popularLabel">ПОПУЛЯРНИЙ</div>
+                        <h3 class="text-2xl font-medium text-center text-white" data-key="premiumTitle">Преміум</h3>
+                        <p class="text-center text-gray-400 mt-2 font-light" data-key="premiumSubtitle">Для кількох локацій або складних маршрутів</p>
                         <div class="text-center my-6">
-                            <span class="text-5xl font-semibold text-gray-900">$500</span>
+                            <span class="text-5xl font-semibold text-white">$500</span>
                         </div>
-                        <ul class="space-y-4 text-gray-600 flex-grow text-sm font-light">
+                        <ul class="space-y-4 text-gray-400 flex-grow text-sm font-light">
                             <li data-key="premiumFeature1">✓ До 3-х відео-маршрутів</li>
                             <li data-key="premiumFeature2">✓ Кілька орієнтирів</li>
                             <li data-key="premiumFeature3">✓ Просунутий монтаж і графіка</li>
                             <li data-key="premiumFeature4">✓ Інтерактивні елементи (по кліку)</li>
                             <li data-key="premiumFeature5">✓ QR-коди і посилання для кожного відео</li>
                         </ul>
-                        <a href="#contact" class="mt-8 w-full text-center bg-blue-500 text-white font-medium py-3 rounded-full hover:bg-blue-600 transition-colors" data-key="selectButton">Обрати</a>
+                        <a href="#contact" class="mt-8 w-full text-center bg-white text-[#0A0A1F] font-medium py-3 rounded-full hover:bg-gray-200 transition-colors" data-key="selectButton">Обрати</a>
                     </div>
 
-                    <div class="card border border-gray-200 rounded-xl p-8 flex flex-col bg-white fade-in" style="animation-delay: 0.6s;">
-                        <h3 class="text-2xl font-medium text-center text-gray-900" data-key="subscriptionTitle">Підписка</h3>
-                         <p class="text-center text-gray-500 mt-2 font-light" data-key="subscriptionSubtitle">Для мереж і франшиз</p>
+                    <div class="card border border-gray-700 rounded-xl p-8 flex flex-col bg-gray-800 fade-in" style="animation-delay: 0.6s;">
+                        <h3 class="text-2xl font-medium text-center text-white" data-key="subscriptionTitle">Підписка</h3>
+                         <p class="text-center text-gray-400 mt-2 font-light" data-key="subscriptionSubtitle">Для мереж і франшиз</p>
                         <div class="text-center my-6">
-                            <span class="text-5xl font-semibold text-gray-900">$300</span>
-                            <span class="text-xl text-gray-500 font-light" data-key="perMonth">/міс</span>
+                            <span class="text-5xl font-semibold text-white">$300</span>
+                            <span class="text-xl text-gray-400 font-light" data-key="perMonth">/міс</span>
                         </div>
-                        <ul class="space-y-4 text-gray-600 flex-grow text-sm font-light">
+                        <ul class="space-y-4 text-gray-400 flex-grow text-sm font-light">
                             <li data-key="subscriptionFeature1">✓ До 5 нових відео-адрес на місяць</li>
                             <li data-key="subscriptionFeature2">✓ Усі можливості "Преміум"</li>
                             <li data-key="subscriptionFeature3">✓ Пріоритетна підтримка</li>
                             <li data-key="subscriptionFeature4">✓ Сезонні оновлення відео</li>
                         </ul>
-                        <a href="#contact" class="mt-8 w-full text-center bg-gray-200 text-gray-800 font-medium py-3 rounded-full hover:bg-gray-300 transition-colors" data-key="selectButton">Обрати</a>
+                        <a href="#contact" class="mt-8 w-full text-center bg-gray-600 text-white font-medium py-3 rounded-full hover:bg-gray-700 transition-colors" data-key="selectButton">Обрати</a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="calculator" class="py-20 mobile-fade-in" style="animation-delay: 1s;">
+        <section id="calculator" class="py-20">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12 fade-in">
-                    <h2 class="text-3xl md:text-4xl font-semibold text-gray-900" data-key="calculatorTitle">Розрахуйте вартість для вашого бізнесу</h2>
-                    <p class="mt-4 text-gray-600 max-w-2xl mx-auto font-light" data-key="calculatorSubtitle">Відповідьте на кілька запитань, щоб отримати попередню оцінку вартості проєкту. Це швидко і ні до чого вас не зобов'язує.</p>
+                    <h2 class="text-3xl md:text-4xl font-semibold text-white" data-key="calculatorTitle">Розрахуйте вартість для вашого бізнесу</h2>
+                    <p class="mt-4 text-gray-400 max-w-2xl mx-auto font-light" data-key="calculatorSubtitle">Відповідьте на кілька запитань, щоб отримати попередню оцінку вартості проєкту. Це швидко і ні до чого вас не зобов'язує.</p>
                 </div>
-                <div class="bg-white p-8 rounded-xl shadow-lg max-w-4xl mx-auto fade-in">
+                <div class="bg-gray-900 p-8 rounded-xl shadow-lg max-w-4xl mx-auto fade-in">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                         <div id="calculator-form">
                             <div class="mb-6">
-                                <label class="font-medium text-gray-800 block mb-2" data-key="businessTypeLabel">1. Оберіть тип вашого бізнесу:</label>
-                                <select id="business-type" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <label class="font-medium text-gray-300 block mb-2" data-key="businessTypeLabel">1. Оберіть тип вашого бізнесу:</label>
+                                <select id="business-type" class="w-full p-3 border border-gray-700 rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-pink-500">
                                     <option value="smb" data-key="smbOption">Мале/середнє підприємство (МСП)</option>
                                     <option value="large" data-key="largeOption">Велика компанія (ТЦ, клініка)</option>
                                     <option value="restaurant" data-key="restaurantOption">Ресторан або кафе</option>
@@ -267,36 +275,36 @@
                                 </select>
                             </div>
                             <div class="mb-6">
-                                <label class="font-medium text-gray-800 block mb-2" data-key="locationsLabel">2. Скільки локацій/маршрутів потрібно?</label>
-                                <input type="number" id="locations-count" value="1" min="1" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <label class="font-medium text-gray-300 block mb-2" data-key="locationsLabel">2. Скільки локацій/маршрутів потрібно?</label>
+                                <input type="number" id="locations-count" value="1" min="1" class="w-full p-3 border border-gray-700 rounded-lg bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-pink-500">
                             </div>
                             <div class="mb-6">
-                                <label class="font-medium text-gray-800 block mb-2" data-key="optionsLabel">3. Додаткові опції:</label>
+                                <label class="font-medium text-gray-300 block mb-2" data-key="optionsLabel">3. Додаткові опції:</label>
                                 <div class="space-y-2">
-                                    <label class="flex items-center text-sm font-light">
-                                        <input type="checkbox" id="option-animation" value="150" class="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                                        <span class="ml-3 text-gray-700" data-key="animationOption">Анімація і графіка (+ $150)</span>
+                                    <label class="flex items-center text-sm font-light text-gray-400">
+                                        <input type="checkbox" id="option-animation" value="150" class="h-5 w-5 text-pink-500 border-gray-700 rounded focus:ring-pink-500">
+                                        <span class="ml-3" data-key="animationOption">Анімація і графіка (+ $150)</span>
                                     </label>
-                                    <label class="flex items-center text-sm font-light">
-                                        <input type="checkbox" id="option-interactive" value="200" class="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                                        <span class="ml-3 text-gray-700" data-key="interactiveOption">Інтерактивні елементи (+ $200)</span>
+                                    <label class="flex items-center text-sm font-light text-gray-400">
+                                        <input type="checkbox" id="option-interactive" value="200" class="h-5 w-5 text-pink-500 border-gray-700 rounded focus:ring-pink-500">
+                                        <span class="ml-3" data-key="interactiveOption">Інтерактивні елементи (+ $200)</span>
                                     </label>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="text-center p-8 bg-gray-50 rounded-lg border border-gray-200">
-                            <p class="text-lg text-gray-600 font-light" data-key="estimatedPriceText">Орієнтовна вартість:</p>
-                            <div id="total-price" class="text-5xl font-semibold text-gray-900 my-4">$0</div>
-                            <p class="text-xs text-gray-500 font-light" data-key="disclaimerText">Це попередній розрахунок. Точна вартість буде визначена після обговорення деталей проєкту.</p>
+                        <div class="text-center p-8 rounded-lg border border-gray-700 animated-background">
+                            <p class="text-lg text-white font-medium" data-key="estimatedPriceText">Орієнтовна вартість:</p>
+                            <div id="total-price" class="text-5xl font-bold text-white my-4 drop-shadow-md">$0</div>
+                            <p class="text-xs text-gray-200 font-light" data-key="disclaimerText">Це попередній розрахунок. Точна вартість буде визначена після обговорення деталей проєкту.</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="mt-16 fade-in">
                      <div class="text-center mb-8">
-                        <h3 class="text-2xl md:text-3xl font-semibold text-gray-900" data-key="chartTitle">Порівняння цін по категоріях</h3>
-                        <p class="mt-2 text-gray-600 max-w-2xl mx-auto font-light" data-key="chartSubtitle">Ваша пропозиція в порівнянні з середньою вартістю для різних типів бізнесу.</p>
+                        <h3 class="text-2xl md:text-3xl font-semibold text-white" data-key="chartTitle">Порівняння цін по категоріях</h3>
+                        <p class="mt-2 text-gray-400 max-w-2xl mx-auto font-light" data-key="chartSubtitle">Ваша пропозиція в порівнянні з середньою вартістю для різних типів бізнесу.</p>
                     </div>
                     <div class="chart-container">
                         <canvas id="priceChart"></canvas>
@@ -305,7 +313,7 @@
             </div>
         </section>
 
-        <section id="contact" class="py-20 bg-gray-900 mobile-fade-in" style="animation-delay: 1.2s;">
+        <section id="contact" class="py-20 bg-gray-900">
             <div class="container mx-auto px-6 text-center">
                 <h2 class="text-3xl md:text-4xl font-semibold text-white" data-key="contactTitle">Готові спростити життя вашим клієнтам?</h2>
                 <p class="mt-4 text-lg text-gray-300 max-w-2xl mx-auto font-light" data-key="contactSubtitle">
@@ -320,7 +328,7 @@
         </section>
     </main>
 
-    <footer class="bg-white py-8 border-t border-gray-200">
+    <footer class="bg-gray-900 py-8 border-t border-gray-800">
         <div class="container mx-auto px-6 text-center text-gray-500 text-sm">
             <p data-key="footerText" class="font-light">&copy; 2025 Відео-Адреса. Усі права захищені.</p>
         </div>
@@ -490,7 +498,7 @@
             const optionInteractiveEl = document.getElementById('option-interactive');
             const totalPriceEl = document.getElementById('total-price');
 
-            const langFlags = document.querySelectorAll('.language-flag');
+            const langButtons = document.querySelectorAll('.language-btn');
             let currentLang = localStorage.getItem('lang') || 'uk';
 
             const ctx = document.getElementById('priceChart').getContext('2d');
@@ -511,7 +519,7 @@
                 document.getElementById('business-type').options[2].textContent = translations[currentLang].restaurantOption;
                 document.getElementById('business-type').options[3].textContent = translations[currentLang].hotelOption;
 
-                langFlags.forEach(flag => flag.classList.remove('active'));
+                langButtons.forEach(btn => btn.classList.remove('active'));
                 document.querySelector(`[data-lang="${currentLang}"]`).classList.add('active');
 
                 if (priceChart) {
@@ -547,11 +555,11 @@
                             label: translations[currentLang].chartLabel,
                             data: Object.values(pricingData).map(p => p.base).concat([0]),
                             backgroundColor: [
-                                '#E6E6E6',
-                                '#E6E6E6',
-                                '#E6E6E6',
-                                '#E6E6E6',
-                                '#007BFF',
+                                'rgba(255, 93, 123, 0.6)',
+                                'rgba(126, 34, 206, 0.6)',
+                                'rgba(255, 93, 123, 0.6)',
+                                'rgba(126, 34, 206, 0.6)',
+                                '#E5E7EB',
                             ],
                             borderRadius: 6,
                             borderWidth: 0,
@@ -566,7 +574,7 @@
                                     display: false,
                                 },
                                 ticks: {
-                                    color: '#666',
+                                    color: '#E5E7EB',
                                     font: {
                                         family: 'Inter',
                                         weight: 'light'
@@ -576,13 +584,13 @@
                             y: {
                                 beginAtZero: true,
                                 grid: {
-                                    color: '#E6E6E6'
+                                    color: 'rgba(255, 255, 255, 0.1)'
                                 },
                                 ticks: {
                                     callback: function(value) {
                                         return '$' + value;
                                     },
-                                    color: '#666',
+                                    color: '#E5E7EB',
                                     font: {
                                         family: 'Inter',
                                         weight: 'light'
@@ -622,9 +630,9 @@
                 priceChart.update();
             }
 
-            langFlags.forEach(flag => {
-                flag.addEventListener('click', () => {
-                    const lang = flag.getAttribute('data-lang');
+            langButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const lang = btn.getAttribute('data-lang');
                     if (lang !== currentLang) {
                         currentLang = lang;
                         localStorage.setItem('lang', currentLang);
